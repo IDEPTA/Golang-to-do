@@ -1,2 +1,9 @@
 # Golang-to-do
-API для управления todo листом на Go+Gin
+API для управления CRUD TO-DO листа:
+Стек:
+- Go
+- Gin
+- PostgreSQL
+- Gorm
+- jwt-go
+- bcrypt
