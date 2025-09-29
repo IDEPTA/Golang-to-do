@@ -7,3 +7,4 @@ API для управления CRUD TO-DO листа:
 - Gorm
 - jwt-go
 - bcrypt
+- godotenv
