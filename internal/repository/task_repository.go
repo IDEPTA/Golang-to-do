@@ -44,6 +44,7 @@ func (tr *TaskRepository) Update(id int, task requests.TaskRequest) (models.Task
 	ut.Description = task.Description
 	ut.Completed = task.Completed
 	ut.DateTimeTask = task.DateTimeTask
+	ut.UserID = task.UserID
 	r := tr.db.Save(&ut)
 
 	return ut, r.Error

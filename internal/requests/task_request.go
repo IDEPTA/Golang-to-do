@@ -7,4 +7,5 @@ type TaskRequest struct {
 	Description  string    `json:"description" binding:"omitempty,max=500"`
 	Completed    bool      `json:"completed" binding:"omitempty"`
 	DateTimeTask time.Time `json:"date_time_task" binding:"required"`
+	UserID       int64     `json:"user_id" binding:"required"`
 }

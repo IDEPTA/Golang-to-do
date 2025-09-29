@@ -16,7 +16,11 @@ func main() {
 	ts := service.NewTaskService(tr)
 	th := handlers.NewTaskHandler(ts)
 
-	r := routes.NewRouter(th)
+	ar := repository.NewAuthkRepository(db.GetDB())
+	as := service.NewAuthService(ar)
+	ah := handlers.NewAuthHandler(as)
+
+	r := routes.NewRouter(th, ah)
 	e := r.SetupRoutes()
 	e.Run(":8080")
 }
