@@ -38,6 +38,7 @@ func (r *Router) SetupRoutes() *gin.Engine {
 	{
 		auth.POST("/login", r.authHandler.Login)
 		auth.POST("/register", r.authHandler.Register)
+		auth.GET("/me", middleware.AuthMiddleware(r.authHandler.As.Ar), r.authHandler.Me)
 	}
 	return e
 }

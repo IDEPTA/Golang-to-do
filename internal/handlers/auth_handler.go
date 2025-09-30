@@ -50,3 +50,13 @@ func (ah *AuthHandler) Register(c *gin.Context) {
 
 	c.JSON(201, gin.H{"token": token})
 }
+
+func (ah *AuthHandler) Me(c *gin.Context) {
+	user, exist := c.Get("user")
+	if !exist {
+		c.JSON(401, gin.H{"error": "User not found"})
+		return
+	}
+
+	c.JSON(200, gin.H{"user": user})
+}
