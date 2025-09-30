@@ -37,6 +37,7 @@ func (ts *TaskService) Create(task requests.TaskRequest) (models.Task, error) {
 		Description:  task.Description,
 		Completed:    task.Completed,
 		DateTimeTask: task.DateTimeTask,
+		UserID:       task.UserID,
 	}
 
 	createdTask, err := ts.TaskRepository.Create(nt)

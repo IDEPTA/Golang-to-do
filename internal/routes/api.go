@@ -2,30 +2,43 @@ package routes
 
 import (
 	"todo/internal/handlers"
+	"todo/pkg/middleware"
 
 	"github.com/gin-gonic/gin"
 )
 
 type Router struct {
 	taskHandler *handlers.TaskHandler
+	authHandler *handlers.AuthHandler
 }
 
-func NewRouter(taskHandler *handlers.TaskHandler) *Router {
+func NewRouter(taskHandler *handlers.TaskHandler, authHandler *handlers.AuthHandler) *Router {
 	return &Router{
-		taskHandler: taskHandler}
+		taskHandler: taskHandler,
+		authHandler: authHandler,
+	}
 }
 
 func (r *Router) SetupRoutes() *gin.Engine {
 	e := gin.Default()
 
 	api := e.Group("/api")
+
+	tasks := api.Group("/tasks")
+	tasks.Use(middleware.AuthMiddleware(r.authHandler.As.Ar))
 	{
-		api.GET("/tasks", r.taskHandler.GetAll)
-		api.GET("/tasks/:id", r.taskHandler.GetByID)
-		api.PUT("/tasks/:id", r.taskHandler.Update)
-		api.POST("/tasks", r.taskHandler.Create)
-		api.DELETE("/tasks/:id", r.taskHandler.Delete)
+		tasks.GET("/", r.taskHandler.GetAll)
+		tasks.GET("/:id", r.taskHandler.GetByID)
+		tasks.PUT("/:id", r.taskHandler.Update)
+		tasks.POST("/", r.taskHandler.Create)
+		tasks.DELETE("/:id", r.taskHandler.Delete)
 	}
 
+	auth := api.Group("/auth")
+	{
+		auth.POST("/login", r.authHandler.Login)
+		auth.POST("/register", r.authHandler.Register)
+		auth.GET("/me", middleware.AuthMiddleware(r.authHandler.As.Ar), r.authHandler.Me)
+	}
 	return e
 }
