@@ -2,16 +2,16 @@ package handlers
 
 import (
 	"todo/internal/requests"
-	"todo/internal/service"
+	"todo/internal/services"
 
 	"github.com/gin-gonic/gin"
 )
 
 type AuthHandler struct {
-	As *service.AuthService
+	As *services.AuthService
 }
 
-func NewAuthHandler(as *service.AuthService) *AuthHandler {
+func NewAuthHandler(as *services.AuthService) *AuthHandler {
 	return &AuthHandler{As: as}
 }
 

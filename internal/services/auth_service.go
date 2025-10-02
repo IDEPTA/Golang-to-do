@@ -1,10 +1,10 @@
-package service
+package services
 
 import (
 	"os"
 	"time"
 	"todo/internal/models"
-	"todo/internal/repository"
+	"todo/internal/repositories"
 	"todo/internal/requests"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -12,10 +12,10 @@ import (
 )
 
 type AuthService struct {
-	Ar *repository.AuthRepository
+	Ar *repositories.AuthRepository
 }
 
-func NewAuthService(ar *repository.AuthRepository) *AuthService {
+func NewAuthService(ar *repositories.AuthRepository) *AuthService {
 	return &AuthService{Ar: ar}
 }
 

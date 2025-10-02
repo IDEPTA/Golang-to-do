@@ -4,13 +4,13 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"todo/internal/repository"
+	"todo/internal/repositories"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func AuthMiddleware(ar *repository.AuthRepository) gin.HandlerFunc {
+func AuthMiddleware(ar *repositories.AuthRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		jwtSecret := []byte(os.Getenv("JWT_SECRET"))
 
