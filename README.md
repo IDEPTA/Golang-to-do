@@ -8,3 +8,6 @@ API для управления CRUD TO-DO листа:
 - jwt-go
 - bcrypt
 - godotenv
+
+#todo
+- разобраться с юнит тестами
