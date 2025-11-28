@@ -21,6 +21,9 @@ golang-to-do/
 │   │   ├── task.go
 │   │   └── user.go
 │   │
+│   ├── container/            # Контейнеры
+│   │   └── di.go             # Конструктор зависимостей
+│   │
 │   ├── handlers/           # Слушатели (контроллеры)
 │   │   ├── auth_handler.go      # Слушатель для управления авторизацией
 │   │   └── task_handler.go      # Слушатель для управления задачами
@@ -97,6 +100,36 @@ auth.GET("/me", middleware.AuthMiddleware(r.authHandler.As.Ar), r.authHandler.Me
 	e := r.SetupRoutes()
 	e.Run(":8080")
 ```
+### DI (явная инъекция зависимостей) 
+`DI` - структура, отвечающая за явную инъекцию зависимостей, т.е передачу нужных объектов, таких как сервисов или репозиториев через конструкторы во внутрь других объектов. 
+
+P.S Инъекция называется "явной" тк для реализации используются только конструкторы, без сторонних пакетов.
+
+Общий конструктор:
+```go
+func NewDI(db *gorm.DB) *DI {
+	//Зависимости для группы Task
+	tr := repositories.NewTaskRepository(db)
+	ts := services.NewTaskService(tr)
+	th := handlers.NewTaskHandler(ts)
+
+	//Зависимости для группы Auth
+	ar := repositories.NewAuthRepository(db)
+	as := services.NewAuthService(ar)
+	ah := handlers.NewAuthHandler(as)
+
+	return &DI{
+		TaskHandler: th,
+		AuthHandler: ah,
+	}
+}
+```
+Используем итоговый результат:
+```go
+di := container.NewDI(db.GetDB())
+r := routes.NewRouter(di.TaskHandler,di.AuthHandler)
+```
+
 ### Handler 
 `Handler` - слушатель, обработчик входящих эндпойнтов, аналог контроллеров в Laravel. Каждый метод хэндлера должен иметь сигнатуру `gin.Context`- это объект, который представляет один http запрос (Аналог Request), который содержит всю инфу о нем. Его параметры, тело, заголовки и тд
 ```go
@@ -110,7 +143,8 @@ func (th *TaskHandler) GetAll(c *gin.Context) {
 }
 ```
 Для того, чтобы отдать ответ используем `c.JSON(200,data)`. Это аналог `response()->json($data,200)`, но только без `return`.
-<br> Примеры функций gin.Context:
+
+ Примеры функций gin.Context:
  - `c.Param("id")` - получение параметра из эндпойнта `/task/1`
  - `c.ShouldBindJSON(&input)` - распаковывает тело запроса в структуру input
  - `c.PostForm("name") - содержит данные формы`
@@ -142,7 +176,7 @@ func (as *AuthService) Login(lr requests.LoginRequest) (string, error) {
 }
 ``` 
 Метод `GenerateToken`. Для того, чтобы проверить jwt токен на подлинность нужен `JWT_SECRET `- специальный ключ, который используется для шифрования и генерации токена. Он храниться в `env`. 
-<br> `claims` - данные, зашитые в токен. Для того чтобы их упаковать в правильный массив используется `jwt.MapClaims{}`. ДАлее для генерации токена используем:
+`claims` - данные, зашитые в токен. Для того чтобы их упаковать в правильный массив используется `jwt.MapClaims{}`. ДАлее для генерации токена используем:
 ```go
 token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 ```
