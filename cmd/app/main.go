@@ -3,13 +3,13 @@ package main
 import (
 	"log"
 	"todo/internal/handlers"
-	"todo/internal/repository"
+	"todo/internal/repositories"
 	"todo/internal/routes"
-	"todo/internal/service"
+	"todo/internal/services"
 )
 
 func main() {
-	db := new(repository.DB)
+	db := new(repositories.DB)
 	db.PostgresConnect()
 	log.Println("DB connection established", db.GetDB())
 	// Потом убрать и использовать инъекцию зависимостей
@@ -17,7 +17,11 @@ func main() {
 	ts := service.NewTaskService(tr)
 	th := handlers.NewTaskHandler(ts)
 
-	r := routes.NewRouter(th)
+	ar := repositories.NewAuthkRepository(db.GetDB())
+	as := services.NewAuthService(ar)
+	ah := handlers.NewAuthHandler(as)
+
+	r := routes.NewRouter(th, ah)
 	e := r.SetupRoutes()
 	e.Run(":8080")
 }
