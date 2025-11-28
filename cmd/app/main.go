@@ -3,21 +3,21 @@ package main
 import (
 	"log"
 	"todo/internal/handlers"
-	"todo/internal/repository"
+	"todo/internal/repositories"
 	"todo/internal/routes"
-	"todo/internal/service"
+	"todo/internal/services"
 )
 
 func main() {
-	db := new(repository.DB)
+	db := new(repositories.DB)
 	db.PostgresConnect()
 	log.Println("DB connection established", db.GetDB())
-	tr := repository.NewTaskRepository(db.GetDB())
-	ts := service.NewTaskService(tr)
+	tr := repositories.NewTaskRepository(db.GetDB())
+	ts := services.NewTaskService(tr)
 	th := handlers.NewTaskHandler(ts)
 
-	ar := repository.NewAuthkRepository(db.GetDB())
-	as := service.NewAuthService(ar)
+	ar := repositories.NewAuthkRepository(db.GetDB())
+	as := services.NewAuthService(ar)
 	ah := handlers.NewAuthHandler(as)
 
 	r := routes.NewRouter(th, ah)

@@ -1,16 +1,16 @@
-package service
+package services
 
 import (
 	"todo/internal/models"
-	"todo/internal/repository"
+	"todo/internal/repositories"
 	"todo/internal/requests"
 )
 
 type TaskService struct {
-	TaskRepository *repository.TaskRepository
+	TaskRepository *repositories.TaskRepository
 }
 
-func NewTaskService(TaskRepository *repository.TaskRepository) *TaskService {
+func NewTaskService(TaskRepository *repositories.TaskRepository) *TaskService {
 	return &TaskService{TaskRepository: TaskRepository}
 }
 

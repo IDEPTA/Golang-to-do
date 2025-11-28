@@ -4,16 +4,16 @@ import (
 	"net/http"
 	"strconv"
 	"todo/internal/requests"
-	"todo/internal/service"
+	"todo/internal/services"
 
 	"github.com/gin-gonic/gin"
 )
 
 type TaskHandler struct {
-	TaskService *service.TaskService
+	TaskService *services.TaskService
 }
 
-func NewTaskHandler(TaskService *service.TaskService) *TaskHandler {
+func NewTaskHandler(TaskService *services.TaskService) *TaskHandler {
 	return &TaskHandler{TaskService: TaskService}
 }
 
