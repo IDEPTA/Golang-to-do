@@ -43,7 +43,7 @@ func (d *DB) PostgresConnect() {
 	d.db = db
 
 	// Миграции
-	err = db.AutoMigrate(&models.Task{}, &models.User{})
+	err = db.AutoMigrate(&models.User{}, &models.Task{})
 	if err != nil {
 		log.Fatal("❌ Ошибка миграции базы данных:", err)
 	}
