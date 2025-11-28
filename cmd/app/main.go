@@ -12,6 +12,7 @@ func main() {
 	db := new(repository.DB)
 	db.PostgresConnect()
 	log.Println("DB connection established", db.GetDB())
+	// Потом убрать и использовать инъекцию зависимостей
 	tr := repository.NewTaskRepository(db.GetDB())
 	ts := service.NewTaskService(tr)
 	th := handlers.NewTaskHandler(ts)
